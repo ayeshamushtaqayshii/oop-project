@@ -1,0 +1,144 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cctype>
+
+using namespace std;
+
+//====================== Base Rule Class ======================//
+// Polymorphic class for password rules
+class PasswordRule {
+public:
+    virtual bool validate(const string &password) const = 0;
+    virtual string errorMessage() const = 0;
+    virtual string successMessage() const = 0;
+    virtual ~PasswordRule() {}
+};
+
+//====================== Derived Rule Classes ======================//
+
+class LengthRule : public PasswordRule {
+public:
+    bool validate(const string &password) const override {
+        return password.length() >= 8;
+    }
+    string errorMessage() const override { return "Password must be at least 8 characters long."; }
+    string successMessage() const override { return "Length requirement met."; }
+};
+
+class LowerRule : public PasswordRule {
+public:
+    bool validate(const string &password) const override {
+        for (char c : password)
+            if (islower(c)) return true;
+        return false;
+    }
+    string errorMessage() const override { return "Password must contain at least one lowercase letter (a-z)."; }
+    string successMessage() const override { return "Lowercase letter requirement met."; }
+};
+
+class UpperRule : public PasswordRule {
+public:
+    bool validate(const string &password) const override {
+        for (char c : password)
+            if (isupper(c)) return true;
+        return false;
+    }
+    string errorMessage() const override { return "Password must contain at least one uppercase letter (A-Z)."; }
+    string successMessage() const override { return "Uppercase letter requirement met."; }
+};
+
+class DigitRule : public PasswordRule {
+public:
+    bool validate(const string &password) const override {
+        for (char c : password)
+            if (isdigit(c)) return true;
+        return false;
+    }
+    string errorMessage() const override { return "Password must contain at least one digit (0-9)."; }
+    string successMessage() const override { return "Digit requirement met."; }
+};
+
+class SpecialRule : public PasswordRule {
+    string special = "!@#$%^&*()><,.+=-";
+public:
+    bool validate(const string &password) const override {
+        for (char c : password)
+            if (special.find(c) != string::npos)
+                return true;
+        return false;
+    }
+    string errorMessage() const override {
+        return "Password must contain at least one special character (!@#$%^&*()><,.+=-).";
+    }
+    string successMessage() const override {
+        return "Special character requirement met.";
+    }
+};
+
+//====================== Password Checker Class ======================//
+class PasswordChecker {
+private:
+    vector<PasswordRule*> rules;   // Polymorphism usage
+
+public:
+    PasswordChecker() {
+        // Add required rules
+        rules.push_back(new LengthRule());
+        rules.push_back(new LowerRule());
+        rules.push_back(new UpperRule());
+        rules.push_back(new DigitRule());
+        rules.push_back(new SpecialRule());
+    }
+
+    ~PasswordChecker() {
+        for (auto rule : rules)
+            delete rule;
+    }
+
+    bool check(const string &password) const {
+        bool allPassed = true;
+
+        cout << "\n================ PASSWORD VALIDATION REPORT ================\n";
+
+        for (auto rule : rules) {
+            if (rule->validate(password))
+                cout << "[ OK ] " << rule->successMessage() << endl;
+            else {
+                cout << "[FAIL] " << rule->errorMessage() << endl;
+                allPassed = false;
+            }
+        }
+
+        cout << "============================================================\n";
+
+        return allPassed;
+    }
+};
+
+//====================== Main Program ======================//
+int main() {
+    PasswordChecker checker;
+    string password;
+
+    while (true) {
+        cout << "\n============================================================\n";
+        cout << "                 PASSWORD STRENGTH CHECKER\n";
+        cout << "============================================================\n";
+        cout << "Enter password: ";
+        getline(cin, password);
+
+        bool strong = checker.check(password);
+
+        if (strong) {
+            cout << "\nRESULT: PASSWORD IS STRONG.\n";
+            cout << "============================================================\n";
+            break;
+        } else {
+            cout << "\nRESULT: PASSWORD IS WEAK. Please try again.\n";
+        }
+    }
+
+    cout << "\nThank you for using the Password Checker.\n";
+    return 0;
+}
