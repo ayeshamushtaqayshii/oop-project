@@ -1,0 +1,35 @@
+A Password Strength Checker is a security-based program designed to evaluate the quality and strength of a user’s password.
+It helps users create secure passwords by checking whether the entered password follows specific security rules.
+
+The system analyzes the password based on factors such as:
+
+Minimum length requirement
+Presence of uppercase letters
+Presence of lowercase letters
+Inclusion of numeric digits
+Use of special characters
+
+If the password does not meet these criteria, the program identifies the weaknesses and guides the user by showing what is missing. 
+The user is then asked to improve the password until it becomes strong enough.
+
+Purpose of Password Strength Checker
+
+The main purpose of a password strength checker is to:
+
+Improve account security
+Prevent weak and easily guessable passwords
+Reduce the risk of unauthorized access
+Educate users about strong password practices
+
+Features
+
+Validates password length
+Checks for character diversity
+Provides clear warnings and suggestions
+Prevents reuse of old passwords (optional)
+User-friendly and interactive
+
+Importance
+
+Weak passwords are one of the most common causes of security breaches.
+A password strength checker ensures that users create passwords that are hard to guess and resistant to attacks, thereby increasing overall system security.
